@@ -7,9 +7,12 @@ class SMSManager:
     # Your Auth Token from twilio.com/console
     auth_token = "dce98c38437660974a9e5bd8c652a03b"
 
-    def send_message(self, message):
+    def __init__(self):
+        pass
+
+    def send_message(self, message, phone_number):
         client = Client(self.account_sid, self.auth_token)
         message = client.messages.create(
-            to="+12134482436",
+            to=phone_number,
             from_="+14248359366",
             body=message)
