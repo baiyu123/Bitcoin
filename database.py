@@ -34,3 +34,6 @@ class PriceDatabase:
         c.execute("SELECT price FROM prices WHERE time=?", (time,))
         price = c.fetchone()
         return price[0]
+
+    def close(self):
+        self.conn.close()
