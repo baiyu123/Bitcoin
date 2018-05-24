@@ -1,5 +1,6 @@
 from bitcoin_price import BitcoinPrice
 from database import PriceDatabase
+from math_utils import average, ema, sma
 import time
 
 price_monitor = BitcoinPrice()
@@ -10,17 +11,14 @@ price_database = PriceDatabase()
 prev_time = time.time()
 last_price_check = prev_time
 current_price = 0
-# 5 mins price check
+# 1 mins price check
 
+# sms
+manager = SMSManager()
 
-def average(price_list):
-    sum = 0
-    for price in price_list:
-        sum = sum + price
-    return sum / price_list.size()
 current_price = 0
-six_hour_avg = 0
 hour_avg = 0
+twenty_min_avg = 0
 prev_hour_diff_six = 0
 while True:
     curr_time = time.time()
@@ -29,16 +27,18 @@ while True:
     if interval > 60.0:
         price_database.connect_database('prices.db')
         current_price = price_database.get_latest_available()
-        hour_avg = average(price_database.get_last_items(60))
-        six_hour_avg = average(price_database.get_last_items(60 * 6))
-        hour_diff_six = hour_avg - six_hour_avg
+        twenty_min_avg = ema(price_database.get_last_items(20 * 2), 20)
+        hour_avg = ema(price_database.get_last_items(60 * 2), 60)
+        hour_diff_six = twenty_min_avg - hour_avg
         if prev_hour_diff_six * hour_diff_six < 0:
             # cross over occur
             if hour_diff_six < 0:
                 # sell signal
+                manager.send_message('Sell', '+12134482436')
                 print "Sell"
             if hour_diff_six > 0:
                 # buy signal
+                manager.send_message('Buy', '+12134482436')
                 print "Buy"
         prev_time = curr_time
         price_database.close()

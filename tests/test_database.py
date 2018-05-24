@@ -2,7 +2,10 @@ import unittest
 import sys
 sys.path.append('/Users/baiyuhuang/Desktop/Bitcoin')
 from database import PriceDatabase
+from math_utils import average, ema, sma
+
 # python -m unittest test_database.TestDatabase
+# python -m unittest test_database.TestMath
 
 
 class TestDatabase(unittest.TestCase):
@@ -44,6 +47,21 @@ class TestDatabase(unittest.TestCase):
         db.save_price(6, 6000.0)
         price = db.get_latest_available()
         self.assertEqual(price, 6000.0)
+
+
+class TestMath(unittest.TestCase):
+
+    def test_sma(self):
+        data = [1, 2, 3, 4, 5, 6]
+        result = sma(data, 6)
+        self.assertEqual(result, 3.5)
+
+    def test_ema(self):
+        data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        print len(data)
+        result = ema(data, 5)
+        print result
+
 
 if __name__ == '__main__':
     unittest.main()

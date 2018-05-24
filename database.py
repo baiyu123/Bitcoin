@@ -53,7 +53,10 @@ class PriceDatabase:
         prices = c.fetchall()
         ret_val = []
         for price in prices:
-            ret_val.append(price[0])
+            if isinstance(price, float):
+                ret_val.append(price[0])
+            else:
+                ret_val.append(float(price[0].replace(',', '')))
         return ret_val
 
     def close(self):
