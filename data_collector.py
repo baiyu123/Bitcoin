@@ -17,7 +17,7 @@ while True:
     curr_time = time.time()
     interval = curr_time - prev_time
     # check price every 60 seconds
-    if interval > 1.0:
+    if interval > 60.0:
         price_database.connect_database('prices.db')
         counter = counter + 1
         current_price = price_monitor.get_current_price()
